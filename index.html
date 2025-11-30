@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DevSecOps Security Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-dot"></span>
+        <span>DevSecOps Monitor</span>
+      </div>
+      <nav class="nav">
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">Pipelines</a>
+        <a href="#" class="nav-item">Alerts</a>
+        <a href="#" class="nav-item">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user">
+          <div class="user-avatar">H</div>
+          <div class="user-info">
+            <div class="user-name">Habib</div>
+            <div class="user-role">Security Engineer</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Security Monitoring</h1>
+          <p class="subtitle">Real-time view of your DevSecOps pipeline.</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="status-pill status-ok">
+            <span class="dot"></span>
+            All systems healthy
+          </div>
+          <button class="btn primary" id="refreshButton">Refresh data</button>
+        </div>
+      </header>
+
+      <section class="grid-cards">
+        <div class="card">
+          <div class="card-header">
+            <h2>Pipeline Health</h2>
+          </div>
+          <div class="card-body card-body-horizontal">
+            <div>
+              <div class="metric-label">Last run status</div>
+              <div class="metric-value" id="lastStatus">OK</div>
+              <div class="metric-badge badge-success">Passing</div>
+            </div>
+            <div>
+              <div class="metric-label">Last run</div>
+              <div class="metric-value-small" id="lastRunTime">
+                --
+              </div>
+              <div class="metric-label mt-4">Average duration</div>
+              <div class="metric-value-small" id="avgDuration">
+                4m 12s
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Security Findings</h2>
+          </div>
+          <div class="card-body">
+            <div class="findings">
+              <div class="finding">
+                <span class="badge-dot critical"></span>
+                <span>Critical</span>
+                <span class="finding-count" id="criticalCount">0</span>
+              </div>
+              <div class="finding">
+                <span class="badge-dot high"></span>
+                <span>High</span>
+                <span class="finding-count" id="highCount">1</span>
+              </div>
+              <div class="finding">
+                <span class="badge-dot medium"></span>
+                <span>Medium</span>
+                <span class="finding-count" id="mediumCount">3</span>
+              </div>
+              <div class="finding">
+                <span class="badge-dot low"></span>
+                <span>Low</span>
+                <span class="finding-count" id="lowCount">5</span>
+              </div>
+            </div>
+            <p class="hint">
+              Data from SAST / SCA tools (e.g., Trivy, Semgrep) in the CI pipeline.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Alert Overview</h2>
+          </div>
+          <div class="card-body">
+            <div class="alert-metrics">
+              <div>
+                <div class="metric-label">Open alerts</div>
+                <div class="metric-value-small" id="openAlerts">2</div>
+              </div>
+              <div>
+                <div class="metric-label">Acknowledged</div>
+                <div class="metric-value-small" id="ackAlerts">5</div>
+              </div>
+              <div>
+                <div class="metric-label">Resolved (24h)</div>
+                <div class="metric-value-small" id="resolvedAlerts">9</div>
+              </div>
+            </div>
+            <p class="hint">
+              Alerts triggered when vulnerabilities are found during pipeline runs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card logs-card">
+        <div class="card-header">
+          <h2>Recent Pipeline Runs</h2>
+          <span class="pill">Last 10 runs</span>
+        </div>
+        <div class="card-body">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>Run ID</th>
+                <th>Branch</th>
+                <th>Status</th>
+                <th>Findings</th>
+                <th>Duration</th>
+                <th>Triggered</th>
+              </tr>
+            </thead>
+            <tbody id="runsTableBody">
+              <!-- Rows filled by script.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span id="healthStatusText">
+          Health check: OK • Last update: --
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
