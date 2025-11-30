@@ -1,4 +1,4 @@
-name: CI + Security Scan
+name: Security Scan + Alerting
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
     branches: ["main"]
 
 jobs:
-  security-scan:
+  trivy-scan:
     runs-on: ubuntu-latest
-    steps:
 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Trivy
+      - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.14.0
         with:
           scan-type: "fs"
@@ -22,3 +22,11 @@ jobs:
           format: "table"
           severity: "HIGH,CRITICAL"
           exit-code: "1"
+
+      - name: Send Slack alert if vulnerabilities found
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"🚨 *Security Alert!* Trivy detected HIGH/CRITICAL vulnerabilities in *$GITHUB_REPOSITORY*. Commit: $GITHUB_SHA\"}" \
+          ${{ secrets.SLACK_WEBHOOK }}
+
