@@ -11,19 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Show all files so we can confirm Trivy sees package.json
+      - name: List workspace files
+        run: ls -R ${{ github.workspace }}
+
+      # Run Trivy vulnerability scanner
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.14.0
         with:
           scan-type: "fs"
           scanners: "vuln"
-          scan-ref: "."
+          scan-ref: "${{ github.workspace }}"
           format: "table"
           severity: "HIGH,CRITICAL"
           exit-code: "1"
 
+      # Send Slack notification if the scan FAILS (vulnerabilities detected)
       - name: Send Slack alert if vulnerabilities found
         if: failure()
         run: |
