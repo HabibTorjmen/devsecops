@@ -2,11 +2,9 @@ name: Security Scan + Alerting
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
   pull_request:
-    branches:
-      - main
+    branches: ["main"]
 
 jobs:
   trivy-scan:
@@ -16,25 +14,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show workspace path
-        run: echo "Workspace: ${{ github.workspace }}"
-
       - name: List workspace files
         run: ls -R ${{ github.workspace }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.14.0
         with:
-          scan-type: fs
-          scanners: vuln
-          scan-ref: ${{ github.workspace }}
-          format: table
-          severity: HIGH,CRITICAL
-          exit-code: 1
+          scan-type: "fs"
+          scanners: "vuln"
+          scan-ref: "${{ github.workspace }}"
+          format: "table"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
 
       - name: Send Slack alert if vulnerabilities found
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data "{\"text\": \"🚨 *Security Alert!* Trivy detected HIGH/CRITICAL vulnerabilities in *$GITHUB_REPOSITORY*. Commit: $GITHUB_SHA\"}" \
+          --data "{\"text\":\"🚨 *Security Alert!* Trivy detected HIGH/CRITICAL vulnerabilities in *$GITHUB_REPOSITORY*. Commit: $GITHUB_SHA\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
